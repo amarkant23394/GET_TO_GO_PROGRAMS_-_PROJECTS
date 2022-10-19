@@ -1,3 +1,10 @@
+#    __author__ = "M.Satya Amarkant"
+#    __version__ = "1.0"
+#    __credits__ = ["M.SATYA AMARKANT"]
+#    __license__ = "Private Domain :  Requires Approval for the use from M.SATYA AMARKANT"
+#    __maintainer__ = "M.Satya Amarkant"
+#    __contact__ = "amarkant23394@gmail.com"
+#    __status__ = "Development"
 """
 @author: M.Satya Amarkant
 Project Name : Benchmark Generator using Attributed Graph Grammar
