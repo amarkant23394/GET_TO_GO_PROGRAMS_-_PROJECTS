@@ -1,0 +1,24 @@
+#    __author__ = "M.Satya Amarkant"
+#    __version__ = "1.0"
+#    __credits__ = ["M.SATYA AMARKANT"]
+#    __license__ = "Private Domain :  Requires Approval for the use from M.SATYA AMARKANT"
+#    __maintainer__ = "M.Satya Amarkant"
+#    __contact__ = "amarkant23394@gmail.com"
+#    __status__ = "Development"
+
+create_project -force project_1 /home/marupust/project_1 -part xc7vx485tffg1157-1
+set verilog_sources [glob -type f /home/marupust/Desktop/research_benchmark/nikhil_bhaiya_files/*.v]
+
+foreach filename $verilog_sources {
+    puts [format "Reading file %s" $filename]
+    add_files -norecurse [format "%s" $filename]
+    read_verilog $filename
+    set top_module [lindex [find_top -files $filename] 0]
+#    read_verilog $filename
+    update_compile_order -fileset sources_1
+    synth_design -rtl -name rtl_1
+    write_schematic -force -format pdf -orientation portrait /home/marupust/Desktop/research_benchmark/nikhil_bhaiya_files/[format "%s.pdf" $top_module]
+    set_property is_enabled false [get_files [format "%s" $filename]]
+}
+
+close_project
