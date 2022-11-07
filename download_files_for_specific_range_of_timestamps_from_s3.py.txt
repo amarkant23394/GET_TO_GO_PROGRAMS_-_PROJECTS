@@ -1,0 +1,44 @@
+import boto3
+from boto3.session import Session
+from datetime import date
+import os
+
+def download_files_from_s3_under_specific_date(access_key,secret_access_key,bucket_name,file_suffix,start_date,end_date,top_directory_path):
+    ACCESS_KEY_ID = access_key
+    SECRET_ACCESS_KEY = secret_access_key
+    BUCKET_NAME = bucket_name
+    
+    session=Session(aws_access_key_id=ACCESS_KEY_ID,aws_secret_access_key=SECRET_ACCESS_KEY)
+    s3=session.resource('s3')
+    my_bucket=s3.Bucket(BUCKET_NAME)
+    key_list = []
+    startDate = start_date
+    endDate = end_date
+    for s3_files in my_bucket.objects.all():
+        file_path=str(s3_files.key)
+        if file_path.endswith(file_suffix):
+            file_dir_split=file_path.split('/')
+            date_split = []
+            if file_dir_split[1]=="final-run":
+                date_split=file_dir_split[2].split('-')
+            elif file_dir_split[1]=="dry-run":
+                date_split=file_dir_split[2].split('T')[0].split('-')
+            else:
+                continue
+                
+            file_year=date_split[0]
+            file_month=date_split[1]
+            file_day=date_split[2]
+            date_obj=date(int(file_year),int(file_month),int(file_day))
+            if startDate<=date_obj<endDate:
+                directory_path_split=file_dir_split
+                path_str = top_directory_path
+                for index,directory_name in enumerate(directory_path_split[:-1]):
+                    path_str += "/" + directory_name
+    
+                # Create target Directory if don't exist
+                    if not os.path.exists(path_str):
+                        os.makedirs(path_str)
+    
+                path_str += "/"+directory_path_split[-1]
+                my_bucket.download_file(file_path,path_str) 
