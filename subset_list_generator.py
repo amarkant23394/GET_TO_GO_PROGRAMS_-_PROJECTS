@@ -1,6 +1,6 @@
 ret_subset_sum_list = []
 def subset_sum(numbers, target, partial=[]):
-    s = sum(n for _, n in partial)
+    s = sum(n for n in partial)
 
     # check if the partial sum is equals to target
     if s == target:
