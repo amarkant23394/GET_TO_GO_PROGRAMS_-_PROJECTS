@@ -1,0 +1,25 @@
+import boto3
+import os
+import time
+
+
+def sleep_time(hour, minute, sec):
+    return hour * 3600 + minute * 60 + sec
+
+def upload_file(file_name, bucket, object_name):
+    s3_client = boto3.client('s3')
+    response = s3_client.upload_file(file_name, bucket, object_name)
+
+def upload_all_the_files_to_bucket_from_top_directory(bucket_name,local_top_directory_path,time_for_sleep_in_minutes):
+	bucket = bucket_name
+	path = local_top_directory_path
+	time_gap = sleep_time(0, time_for_sleep_in_minutes, 0)
+
+	for subdir, dirs, files in os.walk(path):
+	    for file in files:
+      	  print(os.path.join(subdir, file))
+	        file_path=os.path.join(subdir, file)
+	        object_path_str= str(os.path.join(subdir, file)).split('/')[1:]
+      	  object_prefix="/".join(object_path_str)
+	        upload_file(file_path, bucket, object_prefix)
+      	  time.sleep(time_gap)
